@@ -1,16 +1,15 @@
 <?php
-include("admin/controller/handleImage/uploadImage.php");
 
-class CategoryController
+class ProductController
 {
     private $model;
 
     public function __construct($db)
     {
-        $this->model = new CategoryModel($db);
+        $this->model = new ProductModel($db);
     }
 
-    public function getCategories()
+    public function getProducts()
     {
         try {
             if (isset($_GET['order'])) {
@@ -23,7 +22,7 @@ class CategoryController
                 'order' => $order,
             ];
 
-            $result = $this->model->getcategory($data);
+            $result = $this->model->getProduct($data);
 
             return json_encode($result);
         } catch (Exception $e) {
@@ -31,47 +30,38 @@ class CategoryController
         }
     }
 
-    public function addCategory($data)
+    public function addProduct($data)
     {
-
-        if (isset($_FILES["image"])) {
-            $fileName = uploadImage($_FILES["image"]);
-            if (!is_string($fileName)) {
-                return json_encode(['error' => $fileName]); // Return error message
-            }
-            $data['image'] = $fileName; // Add the file name to the data array
-        }
-
         try {
-            $categoryId = $this->model->createCategory($data);
-            return json_encode(['category_id' => $categoryId]);
+            $productId = $this->model->createProduct($data);
+            return json_encode(['product_id' => $productId]);
         } catch (Exception $e) {
             return json_encode(['error' => $e->getMessage()]);
         }
 
     }
 
-    public function getCategoryById($id)
+    public function getProductById($id)
     {
         try {
-            $category = $this->model->getCategoryById($id);
+            $product = $this->model->getProductById($id);
 
-            if (!$category) {
+            if (!$product) {
                 http_response_code(404);
-                echo json_encode(['error' => 'Category not found']);
+                echo json_encode(['error' => 'Product not found']);
                 return;
             }
 
-            return json_encode($category);
+            return json_encode($product);
         } catch (Exception $e) {
             return json_encode(['error' => $e->getMessage()]);
         }
     }
 
-    public function updateCategory($id, $data)
+    public function updateProduct($id, $data)
     {
         try {
-            if ($this->model->updateCategory($id, $data)) {
+            if ($this->model->updateProduct($id, $data)) {
                 echo json_encode(['success' => true]);
             } else {
                 return json_encode(['error' => 'The update failed']);
@@ -81,10 +71,10 @@ class CategoryController
         }
     }
 
-    public function deleteCategory($id)
+    public function deleteProduct($id)
     {
         try {
-            $this->model->deleteCategory($id);
+            $this->model->deleteProduct($id);
 
             return json_encode(['success' => true]);
         } catch (Exception $e) {
