@@ -5,7 +5,8 @@
 ## Branches
 
 - **basic-php:** Lessons and exercises on the basics of PHP, including variables, data types, string functions, operators, conditional statements, loops, functions, arrays, and global variables.
-- **MySQL:** Lessons and exercises on more advanced PHP topics, such as date and time, file upload, and JSON.
+- **MySQL:** API.
+
 
 ## MySQL
 
