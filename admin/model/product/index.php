@@ -49,12 +49,43 @@ class ProductModel
         return $this->db->lastInsertId();
     }
 
-
     public function updateProduct($id, $data)
     {
-        $sql = "UPDATE product SET product_name = ?, description = ?, price = ?,category = ?  WHERE id = ?";
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute([$data['product_name'], $data['description'], $data['price'], $data['category'], $id]);
+        if (isset($data['product_name']) || isset($data['description']) || isset($data['price']) || isset($data['category'])) {
+            $sql = "UPDATE product SET";
+
+            $params = [];
+            if (isset($data['product_name'])) {
+                $sql .= " product_name = ?,";
+                $params[] = $data['product_name'];
+            }
+
+            if (isset($data['description'])) {
+                $sql .= " description = ?,";
+                $params[] = $data['description'];
+            }
+
+            if (isset($data['price'])) {
+                $sql .= " price = ?,";
+                $params[] = $data['price'];
+            }
+
+            if (isset($data['category'])) {
+                $sql .= " category = ?,";
+                $params[] = $data['category'];
+            }
+
+            $sql = rtrim($sql, ',');
+            $sql .= " WHERE id = ?";
+            $params[] = $id;
+
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute($params);
+
+            return json_encode(['success' => true]);
+        } else {
+            return json_encode(['error' => 'No fields to update']);
+        }
     }
 
     public function deleteProduct($id)

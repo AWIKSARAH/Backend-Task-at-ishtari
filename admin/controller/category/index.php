@@ -70,6 +70,14 @@ class CategoryController
 
     public function updateCategory($id, $data)
     {
+
+        if (isset($_FILES["image"])) {
+            $fileName = uploadImage($_FILES["image"]);
+            if (!is_string($fileName)) {
+                return json_encode(['error' => $fileName]); // Return error message
+            }
+            $data['image'] = $fileName; // Add the file name to the data array
+        }
         try {
             if ($this->model->updateCategory($id, $data)) {
                 echo json_encode(['success' => true]);
@@ -79,6 +87,7 @@ class CategoryController
         } catch (Exception $e) {
             return json_encode(['error' => $e->getMessage()]);
         }
+
     }
 
     public function deleteCategory($id)

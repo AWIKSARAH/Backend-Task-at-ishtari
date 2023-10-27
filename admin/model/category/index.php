@@ -50,13 +50,43 @@ class CategoryModel
         return $this->db->lastInsertId();
     }
 
-
     public function updateCategory($id, $data)
     {
-        $sql = "UPDATE category SET category_name = ?, status = ?, image = ? WHERE id = ?";
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute([$data['category_name'], $data['status'], $data['image'], $id]);
+        if (isset($data['category_name']) || isset($data['status']) || isset($data['image'])) {
+            $sql = "UPDATE category SET";
+
+            $params = [];
+            if (isset($data['category_name'])) {
+                $sql .= " category_name = ?,";
+                $params[] = $data['category_name'];
+            }
+
+            if (isset($data['status'])) {
+                $sql .= " status = ?,";
+                $params[] = $data['status'];
+            }
+
+            if (isset($data['image'])) {
+                $fileName = uploadImage($data['image']);
+                if (is_string($fileName)) {
+                    $sql .= " image = ?,";
+                    $params[] = $fileName;
+                }
+            }
+
+            $sql = rtrim($sql, ',');
+            $sql .= " WHERE id = ?";
+            $params[] = $id;
+
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute($params);
+
+            return json_encode(['success' => true]);
+        } else {
+            return json_encode(['error' => 'No fields to update']);
+        }
     }
+
 
     public function deleteCategory($id)
     {

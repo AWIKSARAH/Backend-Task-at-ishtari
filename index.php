@@ -46,8 +46,12 @@ if (isset($parts[3]) && $parts[3] == 'admin') {
                 break;
             case 'POST':
                 if (isset($parts[5])) {
-                    $data = json_decode(file_get_contents('php://input'), true);
                     $endpoint = $parts[5];
+                    $data = [
+                        'category_name' => $_POST['category_name'],
+                        'status' => $_POST['status'],
+                        'image' => $_FILES['image']
+                    ];
                     $controller = new CategoryController($db);
 
                     switch ($endpoint) {
@@ -65,8 +69,8 @@ if (isset($parts[3]) && $parts[3] == 'admin') {
                 }
                 break;
             case 'PUT':
-                if (isset($parts[6])) {
-                    $id = $parts[6];
+                if (isset($parts[5])) {
+                    $id = $parts[5];
                     $data = json_decode(file_get_contents('php://input'), true);
                     $controller = new CategoryController($db);
                     $controller->updateCategory($id, $data);
