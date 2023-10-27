@@ -13,12 +13,11 @@ MySQL is a relational database management system (RDBMS) that is used to store a
 
 ## API
 
-The API is hosted at the following URL:
+The API is on The MySQL Branch , we have there an ReadMe File to the endPoint
 
 ## Installation
 
 1. Clone this repository.
-
 
 ## Import the database
 
